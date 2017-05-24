@@ -62,7 +62,7 @@ WHERE col = 'test';
 SELECT *
 FROM db_1702.ip;
 
-SHOW DATABASES;kkkkkk
+SHOW DATABASES;
 
 USE db_1702;
 SHOW TABLES;

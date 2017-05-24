@@ -11,4 +11,12 @@ CREATE TABLE db_1702.ip (
 SELECT count(*)
 FROM db_1702.ip;
 
-TRUNCATE TABLE db_1702.ip;
+SELECT *
+FROM db_1702.ip;
+
+#TRUNCATE TABLE db_1702.ip;
+
+LOAD DATA LOCAL INFILE 'C://Users//DELL//IdeaProjects//mysql//sql//ip.txt'
+INTO TABLE db_1702.ip
+FIELDS TERMINATED BY ' '(min,max,geo)
+SET id = NULL ;
