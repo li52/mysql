@@ -8,6 +8,18 @@ CREATE TABLE db_1702.csdn(
 )
   COMMENT 'CSDN 用户表';
 
-SELECT *
+SELECT count(*)
 FROM db_1702.csdn;
+
+LOAD DATA LOCAL INFILE 'C:\\Users\\DELL\\Desktop\\www.csdn.net.sql'
+INTO TABLE db_1702.csdn
+FIELDS TERMINATED BY ' # ' (username, password, email)
+SET id = NULL;
+
+SELECT password
+FROM db_1702.csdn
+GROUP BY password
+ORDER BY count(password) DESC
+LIMIT 10;
+
 
