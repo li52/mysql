@@ -1,52 +1,89 @@
 SHOW DATABASES;
-CREATE DATABASE db_exam;
 
 SELECT *
- FROM db_exam.student;
+FROM scott.emp
+WHERE COMM != 300; -- wrong
 
-CREATE TABLE db_exam.student(
-  id     INT     AUTO_INCREMENT PRIMARY KEY COMMENT ' ID PK',
-  name  VARCHAR(255)COMMENT '姓名',
-  age    INT UNSIGNED COMMENT '年龄',
-  gender CHAR(2) DEFAULT '男' COMMENT '性别',
-  dob    DATE COMMENT '出生日期',
-  departmentId VARCHAR(255)COMMENT '部门'
-)COMMENT '学生表';
-CREATE TABLE db_exam.department(
-  id     INT     AUTO_INCREMENT PRIMARY KEY,
-  title VARCHAR(255)COMMENT '系名称',
-  tel     INT  COMMENT '电话号码'
-)COMMENT '系别表';
-CREATE TABLE db_exam.course(
-  id     INT     AUTO_INCREMENT PRIMARY KEY,
-  title VARCHAR(255)COMMENT '课程名称',
-  credit INT UNSIGNED COMMENT '学分'
-)COMMENT '课程表';
-CREATE TABLE db_exam.student_course(
-  id   INT  AUTO_INCREMENT PRIMARY KEY ,
-  studentId INT COMMENT 'FK',
-  departmentId INT  COMMENT 'FK',
-  grade INT COMMENT '考试成绩'
-)COMMENT '选课表';
+SELECT *
+FROM scott.emp
+WHERE NOT (COMM <=> 300); -- correct
+-- <=>
 
--- 为存在的关联的表追加合理的外键
-ALTER TABLE db_exam.student
-    ADD CONSTRAINT
-fk_student_departmentId
-FOREIGN KEY (departmentId)
-  REFERENCES db_exam.department(id);
-ALTER TABLE db_exam.student_course
-    ADD CONSTRAINT
-fk_student_course_studentId
-FOREIGN KEY (studentId)
-  REFERENCES db_exam.student(id);
-ALTER TABLE db_exam.student_course
-    ADD CONSTRAINT
-fk_student_course_courseId
-FOREIGN KEY (courseId)
-  REFERENCES  db_exam.course(id);
-DROP TABLE db_exam.course;
-DROP TABLE db_exam.student;
-DROP TABLE db_exam.department;
-DROP TABLE db_exam.student_course;
-DROP DATABASE db_exam;
+SELECT *
+FROM scott.emp
+WHERE COMM IS NOT NULL;
+
+SELECT *
+FROM scott.emp
+WHERE NOT (COMM <=> NULL); -- COMM <=> NULL 1
+
+
+SELECT *
+FROM scott.emp; -- 15
+
+SELECT *
+FROM scott.dept; -- 4
+
+SELECT
+  ENAME,
+  DNAME
+FROM scott.emp
+  CROSS JOIN scott.dept; -- join 60 = 15 * 4
+
+SELECT
+  ENAME,
+  LOC
+FROM scott.emp
+  INNER JOIN scott.dept
+  -- 内连接
+    ON scott.emp.DEPTNO = scott.dept.DEPTNO; -- 连接条件 FK ?= PK
+
+SHOW FULL COLUMNS FROM scott.emp;
+SHOW FULL COLUMNS FROM scott.dept;
+
+SELECT *
+FROM scott.emp;
+
+UPDATE scott.emp
+SET sal = 10
+WHERE EMPNO = 1111;
+
+SELECT *
+FROM scott.dept;
+
+SELECT
+  DISTINCT
+  d.DEPTNO,
+  -- ambiguous 模棱两可的\ [æm'bɪgjʊəs]
+  d.DNAME -- d. 提高查询效率
+FROM scott.dept d
+  INNER JOIN scott.emp e
+    ON e.DEPTNO = d.DEPTNO;
+
+# 返回员工和所属经理的姓名
+SELECT
+  e1.ENAME 员工姓名,
+  e2.ENAME 经理姓名
+FROM scott.emp e1 INNER JOIN scott.emp e2 -- 自连接
+    ON e1.MGR = e2.EMPNO;
+
+-- left outer join
+
+SELECT
+  e.ENAME,
+  d.DNAME
+FROM scott.dept d RIGHT OUTER JOIN scott.emp e -- 左外联接
+    ON e.DEPTNO = d.DEPTNO
+
+UNION -- 并集 自动去重
+
+SELECT
+  e.ENAME,
+  d.DNAME
+FROM scott.dept d LEFT OUTER JOIN scott.emp e -- 左外联接
+    ON e.DEPTNO = d.DEPTNO;
+/*
+SELECT s.name, d.tel
+from student s INNER JOIN department d
+ON s.departmentId = d.id;
+*/

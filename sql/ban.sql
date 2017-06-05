@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS db_exam.student(
   age INT NOT NULL COMMENT '年龄',
   gender VARCHAR(255) COMMENT '性别',
   dob DATE COMMENT '出生日期',
-  departmentId INT COMMENT 'FK'
+  departmentId INT COMMENT 'fk'
 )COMMENT '学生表';
 
 CREATE TABLE IF NOT EXISTS db_exam.department(
